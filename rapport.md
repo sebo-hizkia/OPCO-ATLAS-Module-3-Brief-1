@@ -34,21 +34,23 @@ Suppression des attributs sensibles ou identifiants directs :
 - variables pouvant introduire des biais discriminatoires.
 
 ### Tableau récapitulatif des décisions par colonne
-Colonne	Type	Traitement technique	Décision éthique	Raison / justification
-nom	Identifiant	Conservée techniquement	❌ Supprimée	Identifiant direct, inutile et contraire au RGPD
-prenom	Identifiant	Conservée techniquement	❌ Supprimée	Identifiant direct, interdit pour la décision automatisée
-sexe	Catégorielle	Non traitée	❌ Supprimée	Donnée sensible, risque de discrimination
-smoker	Catégorielle (santé)	Non traitée	❌ Supprimée	Donnée liée à la santé → protégée par RGPD
-nationalité_francaise	Catégorielle	Non traitée	❌ Supprimée	Origine nationale → discrimination potentielle
-situation_familiale	Catégorielle	❌ Suppression (trop de NA)	❌ Supprimée	Incomplète + sensible (vie privée)
-risque_personnel	Score interne	Conservée techniquement	❌ Supprimée	Variable potentiellement discriminante / biaisée
-age	Numérique	Outliers filtrés + standardisation	✔️ Conservée	Pertinent pour la solvabilité
-taille	Numérique	Outliers filtrés + standardisation	✔️ Conservée	Pas sensible, utile si corrélée à d'autres variables
-poids	Numérique	Outliers filtrés + standardisation	✔️ Conservée	Pas sensible (hors BMI santé), acceptable
-revenu_estime_mois	Numérique	Outliers filtrés + standardisation	✔️ Conservée	Variable clé pour décision de prêt
-montant_pret	Numérique (cible?)	Outliers filtrés + standardisation	✔️ Conservée	Variable centrale du cas d’usage
-loyer_mensuel	Numérique	Imputation médiane + standardisation	✔️ Conservée	Pertinent pour évaluer reste à vivre
-Toutes autres colonnes numériques	Numérique	Standardisation	✔️ Conservées	Aucune sensibilité détectée
+
+| Colonne                        | Type                    | Traitement technique                      | Décision éthique   | Raison / justification                                         |
+|-------------------------------|--------------------------|--------------------------------------------|---------------------|----------------------------------------------------------------|
+| nom                           | Identifiant              | Conservée techniquement                    | ❌ Supprimée        | Identifiant direct, inutile et contraire au RGPD              |
+| prenom                        | Identifiant              | Conservée techniquement                    | ❌ Supprimée        | Identifiant direct, interdit pour la décision automatisée     |
+| sexe                          | Catégorielle             | Non traitée                                 | ❌ Supprimée        | Donnée sensible, risque de discrimination                      |
+| smoker                        | Catégorielle (santé)     | Non traitée                                 | ❌ Supprimée        | Donnée liée à la santé → protégée par RGPD                    |
+| nationalité_francaise         | Catégorielle             | Non traitée                                 | ❌ Supprimée        | Origine nationale → discrimination potentielle                |
+| situation_familiale           | Catégorielle             | ❌ Suppression (trop de NA)                 | ❌ Supprimée        | Incomplète + sensible (vie privée)                            |
+| risque_personnel              | Score interne            | Conservée techniquement                    | ❌ Supprimée        | Variable potentiellement discriminante / biaisée              |
+| age                           | Numérique                | Outliers filtrés + standardisation         | ✔️ Conservée        | Pertinent pour la solvabilité                                 |
+| taille                        | Numérique                | Outliers filtrés + standardisation         | ✔️ Conservée        | Pas sensible, utile si corrélée à d'autres variables          |
+| poids                         | Numérique                | Outliers filtrés + standardisation         | ✔️ Conservée        | Pas sensible (hors BMI santé), acceptable                     |
+| revenu_estime_mois            | Numérique                | Outliers filtrés + standardisation         | ✔️ Conservée        | Variable clé pour décision de prêt                            |
+| montant_pret                  | Numérique (cible?)       | Outliers filtrés + standardisation         | ✔️ Conservée        | Variable centrale du cas d’usage                              |
+| loyer_mensuel                 | Numérique                | Imputation médiane + standardisation       | ✔️ Conservée        | Pertinent pour évaluer reste à vivre                          |
+| Toutes autres colonnes numériques | Numérique            | Standardisation                            | ✔️ Conservées       | Aucune sensibilité                                   |
 
 ### Résultat final
 
