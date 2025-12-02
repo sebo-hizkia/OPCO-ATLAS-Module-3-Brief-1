@@ -1,0 +1,21 @@
+services:
+  db:
+    image: postgres:15
+    container_name: fastia_db
+    restart: always
+    environment:
+      POSTGRES_USER: fastia
+      POSTGRES_PASSWORD: fastiapwd
+      POSTGRES_DB: fastia
+    ports:
+      - "5436:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U fastia"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pg_data:
