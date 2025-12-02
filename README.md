@@ -10,7 +10,7 @@ pip install -r requirement.txt
 ````
 
 ## Structure du projet
-
+```
 OPCO-ATLAS-Module-3-Brief-1/
 │
 ├── app/
@@ -31,6 +31,7 @@ OPCO-ATLAS-Module-3-Brief-1/
 ├── docker-compose.yml # Contient le service PostgreSQL
 ├── requirements.txt # Dépendances Python
 └── README.md
+```
 
 ## Contexte
 
@@ -72,22 +73,23 @@ Lancement :
 python -m uvicorn app.predict_api:app --reload
 ````
 
-Routes
+| Méthode | Route           | Description             |
+| ------- | --------------- | ----------------------- |
+| GET     | `/clients`      | Liste des clients       |
+| GET     | `/clients/{id}` | Détails d’un client     |
+| POST    | `/clients`      | Ajouter un client       |
+| DELETE  | `/clients/{id}` | Supprimer un client     |
+| PUT     | `/clients/{id}` | Mettre à jour un client |
 
-Clients
-Méthode	Route	Description
-GET	/clients	Liste des clients
-GET	/clients/{id}	Détails d’un client
-POST	/clients	Ajouter un client
-DELETE	/clients/{id}	Supprimer un client
-PUT	/clients/{id}	Mettre à jour un client
-Prets
-Méthode	Route	Description
-GET	/prets	Liste des prêts
-GET	/prets/{id}	Détails d’un prêt
-POST	/prets	Ajouter un prêt
-DELETE	/prets/{id}	Supprimer un prêt
-PUT	/prets/{id}	Mettre à jour un prêt
+
+| Méthode | Route         | Description           |
+| ------- | ------------- | --------------------- |
+| GET     | `/prets`      | Liste des prêts       |
+| GET     | `/prets/{id}` | Détails d’un prêt     |
+| POST    | `/prets`      | Ajouter un prêt       |
+| DELETE  | `/prets/{id}` | Supprimer un prêt     |
+| PUT     | `/prets/{id}` | Mettre à jour un prêt |
+
 
 ### Tests API
 
