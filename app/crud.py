@@ -1,10 +1,10 @@
-# app/crud.py
+# C(reate)R(ead)U(pdate)D(elete)
 from sqlalchemy.orm import Session
 from app import models, schemas
 
 
 # =========================================================
-#                      CLIENT CRUD
+#                      CRUD Client
 # =========================================================
 
 def get_clients(db: Session, skip: int = 0, limit: int = 100):
@@ -16,7 +16,7 @@ def get_client(db: Session, client_id: int):
 
 
 def create_client(db: Session, client: schemas.ClientCreate):
-    db_client = models.Client(**client.dict())
+    db_client = models.Client(**client.model_dump())
     db.add(db_client)
     db.commit()
     db.refresh(db_client)
@@ -36,7 +36,7 @@ def update_client(db: Session, client_id: int, updated_client: schemas.ClientCre
     if not db_client:
         return None
 
-    for field, value in updated_client.dict().items():
+    for field, value in updated_client.model_dump().items():
         setattr(db_client, field, value)
 
     db.commit()
@@ -45,7 +45,7 @@ def update_client(db: Session, client_id: int, updated_client: schemas.ClientCre
 
 
 # =========================================================
-#                        PRET CRUD
+#                        CRUD Pret
 # =========================================================
 
 def get_prets(db: Session, skip: int = 0, limit: int = 100):
@@ -57,7 +57,7 @@ def get_pret(db: Session, pret_id: int):
 
 
 def create_pret(db: Session, pret: schemas.PretCreate):
-    db_pret = models.Pret(**pret.dict())
+    db_pret = models.Pret(**pret.model_dump())
     db.add(db_pret)
     db.commit()
     db.refresh(db_pret)
@@ -77,7 +77,7 @@ def update_pret(db: Session, pret_id: int, updated_pret: schemas.PretCreate):
     if not db_pret:
         return None
 
-    for field, value in updated_pret.dict().items():
+    for field, value in updated_pret.model_dump().items():
         setattr(db_pret, field, value)
 
     db.commit()

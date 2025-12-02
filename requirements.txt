@@ -2,5 +2,11 @@ missingno
 pandas
 PyQt5
 scikit-learn
-ipykernel
-jupyterlab
+sqlalchemy
+psycopg2-binary
+uvicorn[standard]
+fastapi
+pytest
+pytest-cov
+httpx
+loguru

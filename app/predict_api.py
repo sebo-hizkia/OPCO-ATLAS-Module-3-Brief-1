@@ -1,6 +1,5 @@
-# app/main.py
-from fastapi import FastAPI
-
+from fastapi import FastAPI, HTTPException
+from loguru import logger
 from app.database import Base, engine
 from app.models import Client, Pret
 
@@ -31,5 +30,16 @@ app.include_router(prets.router)
 # Route de vérification
 # ---------------------------------------------------------
 @app.get("/health", tags=["system"])
-def health():
-    return {"status": "ok", "database": "connected"}
+async def health():
+    """
+    Retourne l'état de santé de l'API
+    """
+    try:
+        logger.info(f"healthcheck")
+
+        return {"status": "OK", "database": "connected"}
+
+
+    except Exception as e:
+        logger.error(f"Erreur healthcheck : {e}")
+        raise HTTPException(status_code=500, detail="API non fonctionnelle")

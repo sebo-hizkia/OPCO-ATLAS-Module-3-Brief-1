@@ -1,31 +1,28 @@
-# app/schemas.py
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from typing import Optional, List
 from datetime import date
 
-
 # =========================================================
-#                      CLIENT SCHEMAS
+#               Schema de contrôle pour Client
 # =========================================================
 
 class ClientBase(BaseModel):
-    nom: str
-    prenom: str
+    # nom: str
+    # prenom: str
     age: int
-    taille: str
-    poids: str
-    sexe: str
+    taille: float
+    poids: float
+    # sexe: str
     sport_licence: str
     smoker: str
     niveau_etude: str
     region: str
-    nationalite_francaise: str
+    # nationalite_francaise: str
     situation_familiale: Optional[str] = None
     historique_credits: Optional[float] = None
     risque_personnel: Optional[float] = None
     score_credit: Optional[float] = None
     date_creation_compte: Optional[date] = None
-
 
 class ClientCreate(ClientBase):
     pass
@@ -33,13 +30,11 @@ class ClientCreate(ClientBase):
 
 class Client(ClientBase):
     id: int
-
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True) # permet à pydantic d’accepter les objets SQLAlchemy
 
 
 # =========================================================
-#                      PRET SCHEMAS
+#                Schema de contrôle pour Pret
 # =========================================================
 
 class PretBase(BaseModel):
@@ -57,6 +52,4 @@ class PretCreate(PretBase):
 class Pret(PretBase):
     id: int
     client_id: int
-
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)

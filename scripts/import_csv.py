@@ -28,21 +28,23 @@ def import_csv():
         # ---------------------------
         # Création du Client
         # ---------------------------
-        client = Client
-        (
-            nom=row["nom"],
-            prenom=row["prenom"],
+        client = Client(
+            # Pas d'import des données protégées par la RGPD
+            # nom=row["nom"],
+            # prenom=row["prenom"],
             age=int(row["age"]),
 
             # valeurs string comme dans CSV
             taille=convert_comma_float(row["taille"]),
             poids=convert_comma_float(row["poids"]),
-            sexe=row["sexe"],
+            # sexe=row["sexe"], # Ecartée pour des raisons éthiques
             sport_licence=row["sport_licence"],
             smoker=row["smoker"],
             niveau_etude=row["niveau_etude"],
             region=row["region"],
-            nationalite_francaise=row["nationalité_francaise"],
+
+            # Ecartée pour des raisons éthiques
+            # nationalite_francaise=row["nationalité_francaise"],
 
             situation_familiale=row.get("situation_familiale"),
 
