@@ -1,4 +1,4 @@
-# app/database.py
+import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 
@@ -6,14 +6,7 @@ from sqlalchemy.orm import sessionmaker, declarative_base
 # CONFIG : connexion à PostgreSQL dans Docker
 # ---------------------------------------------------------
 
-DATABASE_URL = "postgresql://fastia:fastiapwd@localhost:5436/fastia"
-# IMPORTANT :
-# - user : fastia
-# - password : fastiapwd
-# - host : localhost (car l'API n'est PAS dans Docker pour l'instant)
-# - port : 5436 (car PostgreSQL locaux)
-# - dbname : fastia
-
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 # ---------------------------------------------------------
 # INITIALISATION SQLALCHEMY

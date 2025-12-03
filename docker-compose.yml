@@ -17,5 +17,16 @@ services:
       timeout: 5s
       retries: 5
 
+  api:
+    build: .
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: "postgresql+psycopg2://fastia:fastiapwd@db:5432/fastia"
+    ports:
+      - "9000:9000"
+    volumes:
+      - .:/app
+
 volumes:
   pg_data:

@@ -53,3 +53,11 @@ class Pret(PretBase):
     id: int
     client_id: int
     model_config = ConfigDict(from_attributes=True)
+
+
+# =========================================================
+#      Schema de contrôle pour l'entrée de prédiction
+# =========================================================
+class ClientInput(BaseModel):
+    client: ClientBase
+    pret: PretBase

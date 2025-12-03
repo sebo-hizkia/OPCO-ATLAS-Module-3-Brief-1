@@ -21,14 +21,17 @@ OPCO-ATLAS-Module-3-Brief-1/
 │ ├── crud.py # Fonctions d’accès et manipulation DB
 │ ├── routers/
 │ │ ├── clients.py # Routes CRUD Client
-│ │ └── prets.py # Routes CRUD Pret
+│ │ ├── prets.py # Routes CRUD Pret
+│ │ ├── predict.py # Routes prédiction
+│ │ └── train.py # Routes entraînement du modèle
 │ └── scripts/
 │ └── import_csv.py # Script d’import depuis le CSV
 │
 ├── data/
 │ └── data.csv # Jeu de données
 │
-├── docker-compose.yml # Contient le service PostgreSQL
+├── Dockerfile # Construction de l'image Docker de FastAPI
+├── docker-compose.yml # Contient les services PostgreSQL et FastAPI
 ├── requirements.txt # Dépendances Python
 └── README.md
 ```
@@ -43,9 +46,9 @@ On fait correspondre les types de données entre le csv et la base de données. 
 
 ## Fonctionnalités
 
-### Service PostgreSQL
+### Services PostgreSQL et FastAPI
 
-Démarrage du service :
+Démarrage des services :
 
 ````
 docker compose up -d
@@ -62,16 +65,11 @@ sudo -u postgres psql -h localhost -p 5436 -U fastia
 Lancement du script d'import du fichier data/data.csv dans la base de données PostgreSQL :
 
 ````
-python -m scripts.import_csv
+docker compose exec api python -m scripts.import_csv
 ````
 
 ### API FastAPI
 
-Lancement :
-
-````
-python -m uvicorn app.predict_api:app --reload
-````
 
 | Méthode | Route           | Description             |
 | ------- | --------------- | ----------------------- |

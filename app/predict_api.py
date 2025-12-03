@@ -2,9 +2,10 @@ from fastapi import FastAPI, HTTPException
 from loguru import logger
 from app.database import Base, engine
 from app.models import Client, Pret
+from app.schemas import ClientBase, PretBase
 
 # Routers
-from app.routers import clients, prets
+from app.routers import clients, prets, train
 
 # ---------------------------------------------------------
 # Création des tables (si elles n'existent pas déjà)
@@ -25,6 +26,7 @@ app = FastAPI(
 # ---------------------------------------------------------
 app.include_router(clients.router)
 app.include_router(prets.router)
+app.include_router(train.router)
 
 # ---------------------------------------------------------
 # Route de vérification
@@ -43,3 +45,5 @@ async def health():
     except Exception as e:
         logger.error(f"Erreur healthcheck : {e}")
         raise HTTPException(status_code=500, detail="API non fonctionnelle")
+
+
