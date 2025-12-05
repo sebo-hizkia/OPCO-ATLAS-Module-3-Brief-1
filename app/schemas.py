@@ -24,6 +24,10 @@ class ClientBase(BaseModel):
     score_credit: Optional[float] = None
     date_creation_compte: Optional[date] = None
 
+    # Nouveaux champs du brief 2
+    nb_enfants: int | None = None
+    quotient_caf: float | None = None
+
 class ClientCreate(ClientBase):
     pass
 

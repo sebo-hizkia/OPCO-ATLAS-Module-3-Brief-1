@@ -13,8 +13,6 @@ def test_health():
 
 def test_predict():
     payload = {
-        "nom": "Dupond",
-        "prenom": "Toto",
         "age": 48,
         "taille": 172,
         "poids": 75,
@@ -256,3 +254,34 @@ def test_delete_pret():
     # Ensure deleted
     get_res = client.get(f"/prets/{pret_id}")
     assert get_res.status_code == 404
+
+# ---------------------------------------------------------
+# TEST API: Training
+# ---------------------------------------------------------
+
+def test_train_route():
+    """
+    Teste la route /train pour vérifier :
+    - le statut HTTP
+    - le format de la réponse
+    - que l'entraînement ne plante pas
+    """
+
+    response = client.post("/train/")
+    assert response.status_code == 200, "La route /train doit répondre 200"
+
+    data = response.json()
+
+    # Vérifie la structure minimale attendue
+    assert "status" in data
+    assert data["status"] == "trained"
+
+    # Le chemin du modèle entraîné doit apparaître
+    assert "model_path" in data
+    assert isinstance(data["model_path"], str)
+    assert data["model_path"].endswith(".h5") or data["model_path"].endswith(".pkl")
+
+    # Vérifie que MLflow a probablement loggé un run
+    # (si tu veux rendre le test encore plus strict)
+    assert "run_id" in data
+    assert isinstance(data["run_id"], str)

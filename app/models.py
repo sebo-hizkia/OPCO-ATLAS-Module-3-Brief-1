@@ -51,6 +51,10 @@ class Client(Base):
     # Relation 1:N -> un client peut avoir plusieurs prêts
     prets = relationship("Pret", back_populates="client", cascade="all, delete-orphan")
 
+    # Nouveaux champs introduits dans le brief 2
+    nb_enfants = Column(Integer, nullable=True)
+    quotient_caf = Column(Float, nullable=True)
+
 
 # =========================================================
 #                 Pret (mapping table : prets)

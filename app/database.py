@@ -8,6 +8,9 @@ from sqlalchemy.orm import sessionmaker, declarative_base
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 
+if DATABASE_URL is None:
+    raise ValueError("DATABASE_URL environment variable is required")
+
 # ---------------------------------------------------------
 # INITIALISATION SQLALCHEMY
 # ---------------------------------------------------------

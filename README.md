@@ -104,5 +104,28 @@ docker compose exec api python -m scripts.import_csv
 ### Tests API
 
 ```
-PYTHONPATH=. pytest
+export DATABASE_URL="postgresql+psycopg2://fastia:fastiapwd@localhost:5436/fastia"
+PYTHONPATH=.. pytest
 ```
+
+## Evolution base de données (Brief 2)
+
+### Initialiser Alembic
+
+````
+alembic init alembic
+````
+
+Cela crée :
+
+    alembic/
+
+    alembic.ini
+
+Appliquer une migration
+
+````
+export DATABASE_URL="postgresql+psycopg2://fastia:fastiapwd@localhost:5436/fastia"
+alembic revision --autogenerate -m "message"
+alembic upgrade head
+````
