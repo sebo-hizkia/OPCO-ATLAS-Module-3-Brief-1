@@ -5,7 +5,7 @@ from app.models import Client, Pret
 from app.schemas import ClientBase, PretBase
 
 # Routers
-from app.routers import clients, prets, train
+from app.routers import clients, prets, train, healthcheck
 
 # ---------------------------------------------------------
 # Création des tables (si elles n'existent pas déjà)
@@ -27,23 +27,7 @@ app = FastAPI(
 app.include_router(clients.router)
 app.include_router(prets.router)
 app.include_router(train.router)
+app.include_router(healthcheck.router)
 
-# ---------------------------------------------------------
-# Route de vérification
-# ---------------------------------------------------------
-@app.get("/health", tags=["system"])
-async def health():
-    """
-    Retourne l'état de santé de l'API
-    """
-    try:
-        logger.info(f"healthcheck")
-
-        return {"status": "OK", "database": "connected"}
-
-
-    except Exception as e:
-        logger.error(f"Erreur healthcheck : {e}")
-        raise HTTPException(status_code=500, detail="API non fonctionnelle")
 
 

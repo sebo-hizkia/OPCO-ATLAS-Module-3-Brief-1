@@ -67,6 +67,11 @@ sudo -u postgres psql -h localhost -p 5436 -U fastia
 
 Test de l'API via interface automatique : http://127.0.0.1:9000/docs
 
+Afficher les logs de l'API :
+````
+docker compose logs api
+````
+
 ### Import des données
 
 Lancement du script d'import du fichier data/data.csv dans la base de données PostgreSQL :
