@@ -27,7 +27,6 @@ router = APIRouter(
 def train(db: Session = Depends(get_db)):
     """
     Lance un entraînement du modèle IA
-    (placeholder — à remplacer par ton vrai code IA)
     """
 
     try:

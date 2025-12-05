@@ -105,6 +105,29 @@ def preprocessing(db: Session, target: str = "montant_pret"):
     numeric_cols = [c for c in numeric_cols if c in df_clean.columns]
     categorical_cols = [c for c in categorical_cols if c in df_clean.columns]
 
+    # ------------------------------------
+    # TRAITEMENT DES OUTLIERS (IQR method)
+    # ------------------------------------
+    def treat_outliers_iqr(df, cols):
+        df_out = df.copy()
+        for col in cols:
+            if df_out[col].dtype.kind not in "iuf":  # int/float
+                continue
+
+            Q1 = df_out[col].quantile(0.25)
+            Q3 = df_out[col].quantile(0.75)
+            IQR = Q3 - Q1
+
+            lower = Q1 - 1.5 * IQR
+            upper = Q3 + 1.5 * IQR
+
+            # On tronque les valeurs hors limites
+            df_out[col] = df_out[col].clip(lower, upper)
+
+        return df_out
+
+    df_no_outliers = treat_outliers_iqr(df_clean, numeric_cols)
+
     num_pipeline = Pipeline([
         ("imputer", SimpleImputer(strategy="mean")),
         ("scaler", StandardScaler())
@@ -120,7 +143,7 @@ def preprocessing(db: Session, target: str = "montant_pret"):
         ("cat", cat_pipeline, categorical_cols)
     ])
 
-    X = df_clean.drop(columns=[target])
+    X = df_no_outliers.drop(columns=[target])
     X_processed = preprocessor.fit_transform(X)
 
     return X_processed, y, preprocessor
