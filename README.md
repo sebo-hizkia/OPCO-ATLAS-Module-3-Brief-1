@@ -6,7 +6,7 @@ M3 : Intégrer des nouvelles données en faisant évoluer le pipeline de process
 ````
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -r requirement.txt
+pip install -r requirements.txt
 ````
 
 ## Structure du projet
@@ -54,11 +54,18 @@ Démarrage des services :
 docker compose up -d
 ````
 
+Vérifier que les services tournent :
+````
+docker ps
+````
+
 Accès à la base de données :
 
 ````
 sudo -u postgres psql -h localhost -p 5436 -U fastia
 ````
+
+Test de l'API via interface automatique : http://127.0.0.1:9000/docs
 
 ### Import des données
 

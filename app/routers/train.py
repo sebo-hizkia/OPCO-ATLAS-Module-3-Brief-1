@@ -10,6 +10,8 @@ import mlflow.sklearn
 from app.models_ia import create_nn_model, train_model, model_predict
 from app.modules.preprocess import preprocessing, split
 from app.modules.evaluate import evaluate_performance
+from app.modules.draw import draw_loss
+import matplotlib.pyplot as plt
 
 
 router = APIRouter(
@@ -48,7 +50,6 @@ def train(db: Session = Depends(get_db)):
 
             # # entraîner le modèle
             model, hist = train_model(model, X_train, y_train, X_val=X_test, y_val=y_test)
-            #draw_loss(hist)
 
             duration = round(time.time() - start, 2)
 
@@ -58,11 +59,18 @@ def train(db: Session = Depends(get_db)):
             # mesurer les performances MSE, MAE et R²
             perf = evaluate_performance(y_train, y_pred)
 
+            # génération de la figure de la loss
+            fig = draw_loss(hist)
+
             # Logging MLflow
             mlflow.log_metric("MSE", perf["MSE"])
             mlflow.log_metric("MAE", perf["MAE"])
             mlflow.log_metric("R²", perf["R²"])
             mlflow.sklearn.log_model(model, "new_model")
+            mlflow.log_figure(fig, "loss.png")
+
+            # fermeture propre pour éviter fuites mémoire
+            plt.close(fig)
 
             # Résultat
             return {
