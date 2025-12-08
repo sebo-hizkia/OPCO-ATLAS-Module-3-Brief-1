@@ -47,6 +47,8 @@ def load_training_dataframe(db: Session) -> pd.DataFrame:
                 "niveau_etude": client.niveau_etude,
                 "region": client.region,
                 "situation_familiale": client.situation_familiale,
+                "nb_enfants": client.nb_enfants,
+                "quotient_caf": client.quotient_caf,
             }
         )
 
@@ -54,32 +56,58 @@ def load_training_dataframe(db: Session) -> pd.DataFrame:
 
     return df
 
+def correct_business_rules(df):
+    # nb_enfants ne peut pas être négatif
+    if "nb_enfants" in df.columns:
+        df["nb_enfants"] = df["nb_enfants"].clip(lower=0)
+
+    # quotient_caf ne peut pas être négatif
+    if "quotient_caf" in df.columns:
+        df["quotient_caf"] = df["quotient_caf"].clip(lower=0)
+
+    return df
+
+
 
 def preprocessing(db: Session, target: str = "montant_pret"):
     """
     Fonction pour effectuer le prétraitement des données :
-    - Imputation des valeurs manquantes.
-    - Standardisation des variables numériques.
-    - Encodage des variables catégorielles.
+    - Nettoyage des NaN
+    - Application des règles métier (nb_enfants >= 0, quotient_caf >= 0)
+    - Traitement des outliers (IQR)
+    - Imputation
+    - Encodage catégoriel
+    - Standardisation des variables numériques
     """
 
     df = load_training_dataframe(db)
 
-    # On supprime les lignes où la cible est manquante
+    # -------------------------------
+    # SUPPRESSION LIGNES SANS CIBLE
+    # -------------------------------
     df = df.dropna(subset=[target])
 
     # y = variable à prédire
     y = df[target].astype(float).values
 
-    # Suppression les colonnes avec trop de données manquantes ( > 40%)
+    # ---------------------------------------------------------
+    # SUPPRESSION COLONNES TROP MANQUANTES (> 40 %)
+    # ---------------------------------------------------------
     cols_before = df.shape[1]
-    threshold = 0.40  # 40%
+    threshold = 0.40
     a_supprimer = list(df.columns[df.isna().mean() > threshold])
     df_clean = df.drop(columns=a_supprimer)
     cols_after = df_clean.shape[1]
     print(f"Nb colonnes avant nettoyage : {cols_before}, nb colonnes après : {cols_after}")
 
-    # Colonnes numériques / catégorielles
+    # ---------------------------------------------------------
+    # APPLICATION DES RÈGLES MÉTIER (TRAITEMENT MANQUANT)
+    # ---------------------------------------------------------
+    df_clean = correct_business_rules(df_clean)
+
+    # ---------------------------------------------------------
+    # DÉFINITION DES COLONNES NUMÉRIQUES & CATÉGORIELLES
+    # ---------------------------------------------------------
     numeric_cols = [
         "age",
         "taille",
@@ -91,6 +119,8 @@ def preprocessing(db: Session, target: str = "montant_pret"):
         "loyer_mensuel",
         "score_credit_pret",
         "risque_personnel_pret",
+        "nb_enfants",
+        "quotient_caf",
     ]
 
     categorical_cols = [
@@ -101,17 +131,16 @@ def preprocessing(db: Session, target: str = "montant_pret"):
         "situation_familiale",
     ]
 
-    # On garde seulement celles qui existent réellement (au cas où)
     numeric_cols = [c for c in numeric_cols if c in df_clean.columns]
     categorical_cols = [c for c in categorical_cols if c in df_clean.columns]
 
-    # ------------------------------------
-    # TRAITEMENT DES OUTLIERS (IQR method)
-    # ------------------------------------
+    # ---------------------------------------------------------
+    # TRAITEMENT DES OUTLIERS
+    # ---------------------------------------------------------
     def treat_outliers_iqr(df, cols):
         df_out = df.copy()
         for col in cols:
-            if df_out[col].dtype.kind not in "iuf":  # int/float
+            if df_out[col].dtype.kind not in "iuf":
                 continue
 
             Q1 = df_out[col].quantile(0.25)
@@ -121,13 +150,15 @@ def preprocessing(db: Session, target: str = "montant_pret"):
             lower = Q1 - 1.5 * IQR
             upper = Q3 + 1.5 * IQR
 
-            # On tronque les valeurs hors limites
             df_out[col] = df_out[col].clip(lower, upper)
 
         return df_out
 
     df_no_outliers = treat_outliers_iqr(df_clean, numeric_cols)
 
+    # ---------------------------------------------------------
+    # PIPELINES DE TRANSFORMATION
+    # ---------------------------------------------------------
     num_pipeline = Pipeline([
         ("imputer", SimpleImputer(strategy="mean")),
         ("scaler", StandardScaler())
@@ -143,6 +174,9 @@ def preprocessing(db: Session, target: str = "montant_pret"):
         ("cat", cat_pipeline, categorical_cols)
     ])
 
+    # ---------------------------------------------------------
+    # APPLICATION DU PREPROCESSING
+    # ---------------------------------------------------------
     X = df_no_outliers.drop(columns=[target])
     X_processed = preprocessor.fit_transform(X)
 

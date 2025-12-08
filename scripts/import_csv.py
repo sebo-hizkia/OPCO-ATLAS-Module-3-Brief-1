@@ -46,6 +46,10 @@ def import_csv():
             # Ecartée pour des raisons éthiques
             # nationalite_francaise=row["nationalité_francaise"],
 
+            # Nouveaux champs introduit par le brief 2
+            nb_enfants = row['nb_enfants'],
+            quotient_caf = row['quotient_caf'],
+
             situation_familiale=row.get("situation_familiale"),
 
             historique_credits=convert_comma_float(row["historique_credits"]),

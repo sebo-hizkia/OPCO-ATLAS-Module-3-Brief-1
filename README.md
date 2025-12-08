@@ -105,7 +105,7 @@ docker compose exec api python -m scripts.import_csv
 
 ```
 export DATABASE_URL="postgresql+psycopg2://fastia:fastiapwd@localhost:5436/fastia"
-PYTHONPATH=.. pytest
+PYTHONPATH=. pytest
 ```
 
 ## Evolution base de données (Brief 2)

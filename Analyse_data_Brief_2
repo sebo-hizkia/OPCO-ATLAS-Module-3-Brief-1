@@ -1,7 +1,0 @@
-Le fichier comporte 3 nouvelles colonnes : orientation_sexuelle, nb_enfants et quotient_caf
-orientation_sexuelle est à écarter, car totalement contraire à la RGPD
-nb_enfants contients des valeurs abhérantes (valeurs négative) et son utilité est discutable
-quotient_caf est une donnée financière et sociale, assez sensible, mais peut être très utile pour prédire le montant d'un prêt
-
-Je choisi donc d'ajouter les colonnes nb_enfants et quotient_caf à la table **clients**, en nullable pour ne pas casser l'API et rester compatible avec les anciennes données.
-
