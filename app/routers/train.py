@@ -13,6 +13,8 @@ from app.modules.evaluate import evaluate_performance
 from app.modules.draw import draw_loss
 import matplotlib.pyplot as plt
 
+import joblib, os
+
 
 router = APIRouter(
     prefix="/train",
@@ -27,7 +29,6 @@ router = APIRouter(
 def train(db: Session = Depends(get_db)):
     """
     Lance un entraînement du modèle IA
-    (placeholder — à remplacer par ton vrai code IA)
     """
 
     try:
@@ -39,8 +40,11 @@ def train(db: Session = Depends(get_db)):
             start = time.time()
 
             # preprocesser les data
-            X, y, _ = preprocessing(db)
+            X, y, preprocessor = preprocessing(db)
 
+            # sauvegarde du preprocessor localement
+            os.makedirs("models", exist_ok=True)
+            joblib.dump(preprocessor, "models/preprocessor.pkl")
 
             # split data in train and test dataset
             X_train, X_test, y_train, y_test = split(X, y)
@@ -66,7 +70,8 @@ def train(db: Session = Depends(get_db)):
             mlflow.log_metric("MSE", perf["MSE"])
             mlflow.log_metric("MAE", perf["MAE"])
             mlflow.log_metric("R²", perf["R²"])
-            mlflow.sklearn.log_model(model, "new_model")
+            mlflow.sklearn.log_model(model, "modele_pret") # Enregistrement du modèle dans MLFlow
+            mlflow.log_artifact("models/preprocessor.pkl") # Enregistrement du preprocessor
             mlflow.log_figure(fig, "loss.png")
 
             # fermeture propre pour éviter fuites mémoire
